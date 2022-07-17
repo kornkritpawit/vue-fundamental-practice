@@ -1,7 +1,12 @@
 <template>
-  <div>
+  <div class="content">
+    <button class="add-to-cart" @click="addToCart()">Add ot Cart</button>
     <div class="top-row">
       <div class="top part">
+        <div class="robot-name">
+            {{selectedRobot.head.title}}
+            <span v-if="selectedRobot.head.onSale" class="sale">Sale!</span>
+        </div>
         <img
           :src="selectedRobot.head.src"
           title="head"
@@ -233,5 +238,23 @@ export default {
 }
 .right .next-selector {
   right: -3px;
+}
+.robot-name {
+    position: absolute;
+    top: -25px;
+    text-align: center;
+    width: 100%
+}
+.sale {
+  color: red;
+}
+.content {
+  position: relative;
+}
+.add-to-cart {
+  position: absolute;
+  width:210px;
+  padding:3px;
+  font-size:16px;
 }
 </style>
