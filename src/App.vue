@@ -11,22 +11,28 @@
     </nav>
   </header>
   <main>
-  <RobotBuilder/>
+    <!-- <div class="robot-name">
+      This is a test
+
+    </div> -->
+            <RobotBuilder/>
+<Search/>
   </main>
 </template>
 
 <script>
 // import Homepage from './home/HomePage.vue'
 import RobotBuilder from './build/RobotBuilder.vue'
+import Search from './search/Search.vue'
 
 export default {
   name: 'App',
   components: {
-    RobotBuilder
+    RobotBuilder,
+    Search
   }
 }
 </script>
-
 <style>
 body {
   background: linear-gradient(to bottom, #555, #999);
@@ -40,6 +46,16 @@ body {
   color: #2c3e50;
   margin-top: 60px; */
 }
+</style>
+<style scoped>
+/* .robot-name {color: red;
+  border: 2px solid blue;
+} */
+
+/* .content >>> .robot-name{
+  color: red;
+    border: 2px solid blue;
+} */
 main {
   margin: 0 auto;
   padding: 30px;
