@@ -1,6 +1,26 @@
 <template>
   <div class="content">
-    <button class="add-to-cart" @click="addToCart()">Add ot Cart</button>
+    <div class="part-info" id="partInfo"></div>
+        <div class="preview">
+                  <CollapsibleSection>
+
+      <div class="preview-content">
+        <div class="top-row">
+          <img :src="selectedRobot.head.src"/>
+        </div>
+        <div class="middle-row">
+          <img :src="selectedRobot.leftArm.src" class="rotate-left"/>
+          <img :src="selectedRobot.torso.src"/>
+          <img :src="selectedRobot.rightArm.src" class="rotate-right"/>
+        </div>
+        <div class="bottom-row">
+          <img :src="selectedRobot.base.src"/>
+        </div>
+      </div>
+      </CollapsibleSection>
+              <button class="add-to-cart" @click="addToCart()">Add ot Cart</button>
+    </div>
+
     <div class="top-row">
       <!-- <div :class="[saleBorderClass, 'top', 'part']">
         <div class="robot-name">
@@ -15,7 +35,7 @@
         <button @click="selectNextHead()" class="next-selector">&#9658;</button>
       </div> -->
               <PartSelector
-              @partSelected="part => selectedRobot.head=part" position="top" :parts="availableParts.heads"/>
+              @partSelected="part => testEmithead(part)" position="top" :parts="availableParts.heads"/>
 
     </div>
     <div class="middle-row">
@@ -46,7 +66,8 @@
           &#9660;
         </button>
       </div> -->
-              <PartSelector @partSelected="part => selectedRobot.leftArm=part" position="left" :parts="availableParts.arms"/>
+              <PartSelector @partSelected="part =>{ 
+                selectedRobot.leftArm=part}" position="left" :parts="availableParts.arms"/>
         <PartSelector @partSelected="part => selectedRobot.torso=part" position="center" :parts="availableParts.torsos"/>
         <PartSelector @partSelected="part => selectedRobot.rightArm=part" position="right" :parts="availableParts.arms"/>
 
@@ -88,6 +109,8 @@
 import availableParts from "../data/parts";
 import createdHookMixin from './created-hook-mixin';
 import PartSelector from './PartSelector.vue';
+import CollapsibleSection from '../shared/CollapsibleSection.vue';
+
 // const getPreviousValidIndex = (index, length) => {
 //   const deprecatedIndex = index - 1;
 //   return deprecatedIndex < 0 ? length - 1 : deprecatedIndex;
@@ -100,7 +123,7 @@ import PartSelector from './PartSelector.vue';
 
 export default {
     name: "RobotBuilder",
-    components: {PartSelector},
+    components: {PartSelector, CollapsibleSection},
     data() {
         return {
             availableParts,
@@ -143,6 +166,11 @@ export default {
         // },
     },
     methods: {
+
+        testEmithead(part) {
+            console.log(part)
+            this.selectedRobot.head=part
+        },
         addToCart() {
             const robot = this.selectedRobot;
             const cost = robot.head.cost +
@@ -326,7 +354,7 @@ export default {
 .add-to-cart {
   position: absolute;
   width: 210px;
-  right: 30px;
+//   right: 30px;
   padding: 3px;
   font-size: 16px;
 }
@@ -341,5 +369,36 @@ th {
 }
 .sale-border {
   border: 3px solid red;
+}
+
+.preview {
+  position: absolute;
+  top: -20px;
+  right: 0;
+  width: 210px;
+  height: 210px;
+  padding: 5px;
+}
+.preview-content {
+  border: 1px solid #999;
+}
+.preview img {
+  width: 50px;
+  height: 50px;
+}
+.rotate-right {
+  transform: rotate(90deg);
+}
+.rotate-left {
+  transform: rotate(-90deg);
+}
+
+.part-info {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 210px;
+  height: 210px;
+  padding: 5px;
 }
 </style>

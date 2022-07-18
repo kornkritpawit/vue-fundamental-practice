@@ -1,14 +1,29 @@
 <template>
   <div class="part" :class="position">
-    <img :src="selectedPart.src" title="arm"/>
+  <div>Inject User: {{user.userName}}</div>
+    <img
+      :src="selectedPart.src"
+      @click="showPartInfo = !showPartInfo"
+      title="arm"
+    />
     <button @click="selectPreviousPart()" class="prev-selector"></button>
     <button @click="selectNextPart()" class="next-selector"></button>
     <span class="sale" v-show="selectedPart.onSale">Sale!</span>
+    <teleport to="#partInfo" v-if="showPartInfo">
+      <div >
+        <div>
+          {{ selectedPart.cost }} {{ selectedPart.title }}
+          {{ selectedPart.type }}
+        </div>
+        <div>{{ selectedPart.description }}</div>
+        <hr />
+      </div>
+    </teleport>
   </div>
 </template>
 
 <script>
-import availableParts from '../data/parts';
+import availableParts from "../data/parts";
 
 // const parts = availableParts.heads;
 
@@ -24,6 +39,7 @@ function getNextValidIndex(index, length) {
 
 export default {
   // props: ['parts', 'position'],
+  inject: ['user'],
   props: {
     parts: {
       type: Array,
@@ -33,48 +49,55 @@ export default {
       type: String,
       required: true,
       validator(value) {
-        return ['left', 'right', 'top', 'bottom', 'center'].includes(value);
+        return ["left", "right", "top", "bottom", "center"].includes(value);
       },
     },
   },
   data() {
-    return { selectedPartIndex: 0 };
+    return { selectedPartIndex: 0, showPartInfo: false };
   },
   created() {
-    console.log(this.parts)
+    console.log(this.parts);
+    this.emitSelectedPart();
+  },
+  updated() {
+    // console.log(this.parts)
+    this.emitSelectedPart();
   },
   computed: {
     selectedPart() {
-      
       return this.parts[this.selectedPartIndex];
     },
   },
   methods: {
+    emitSelectedPart() {
+      this.$emit("partSelected", this.selectedPart);
+    },
     selectNextPart() {
       this.selectedPartIndex = getNextValidIndex(
         this.selectedPartIndex,
-        this.parts.length,
+        this.parts.length
       );
-      this.$emit('partSelected', this.selectedPart);
+      // this.$emit('partSelected', this.selectedPart);
+      // this.emitSelectedPart()
     },
     selectPreviousPart() {
       this.selectedPartIndex = getPreviousValidIndex(
         this.selectedPartIndex,
-        this.parts.length,
+        this.parts.length
       );
-      this.$emit('partSelected', this.selectedPart);
+      // this.$emit('partSelected', this.selectedPart);
+      // this.emitSelectedPart()
     },
-
   },
 };
-
 </script>
 
 <style scoped>
 .part {
   position: relative;
-  width:165px;
-  height:165px;
+  width: 165px;
+  height: 165px;
   border: 3px solid #aaa;
 }
 .sale {
@@ -95,7 +118,7 @@ export default {
   top: -25px;
 }
 .part img {
-  width:165px;
+  width: 165px;
 }
 .top {
   border-bottom: none;
@@ -117,7 +140,7 @@ export default {
 }
 .prev-selector {
   position: absolute;
-  z-index:1;
+  z-index: 1;
   top: -3px;
   left: -28px;
   width: 25px;
@@ -125,26 +148,33 @@ export default {
 }
 .next-selector {
   position: absolute;
-  z-index:1;
+  z-index: 1;
   top: -3px;
   right: -28px;
   width: 25px;
   height: 171px;
 }
-.left .prev-selector:after,  .right .prev-selector:after{
-  content: '\25B2'
+.left .prev-selector:after,
+.right .prev-selector:after {
+  content: "\25B2";
 }
-.left .next-selector:after, .right .next-selector:after {
-  content: '\25BC'
+.left .next-selector:after,
+.right .next-selector:after {
+  content: "\25BC";
 }
-.top .prev-selector:after, .bottom .prev-selector:after, .center .prev-selector:after{
-  content: '\25C4'
+.top .prev-selector:after,
+.bottom .prev-selector:after,
+.center .prev-selector:after {
+  content: "\25C4";
 }
-.top .next-selector:after, .bottom .next-selector:after, .center .next-selector:after{
-  content: '\25BA'
+.top .next-selector:after,
+.bottom .next-selector:after,
+.center .next-selector:after {
+  content: "\25BA";
 }
-.center .prev-selector, .center .next-selector {
-  opacity:0.8;
+.center .prev-selector,
+.center .next-selector {
+  opacity: 0.8;
 }
 .left .prev-selector {
   top: -28px;

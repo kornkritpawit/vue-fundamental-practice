@@ -7,6 +7,9 @@
               <img class="logo" src="./assets/build-a-bot-logo.png"/>
               Build-a-Bot
           </li>
+          <li>User: {{user.userName}}
+          <button @click="changeUserName()">Change</button>
+          </li>
       </ul>
     </nav>
   </header>
@@ -27,10 +30,30 @@ import Search from './search/Search.vue'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      // userName: 'Jim' 
+      user: {userName:'John'}
+    }
+  },
+
+  // provide: {
+  //   userName: 'John'
+  // },
+  provide() {
+    // return {userName: this.userName}
+        return {user: this.user}
+
+  },
   components: {
     RobotBuilder,
     Search
-  }
+  },
+  methods: {
+    changeUserName() {
+      this.user.userName = 'Fred'
+    }
+  },
 }
 </script>
 <style>
