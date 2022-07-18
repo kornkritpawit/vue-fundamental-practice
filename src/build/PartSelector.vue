@@ -1,16 +1,25 @@
 <template>
   <div class="part" :class="position">
-  <div>Inject User: {{user.userName}}</div>
-    <img
+    <div>Inject User: {{ user.userName }}</div>
+    <!-- <img
       :src="selectedPart.src"
       @click="showPartInfo = !showPartInfo"
       title="arm"
-    />
+    /> -->
+    <router-link :to="{
+        name: 'Parts',
+        params: {
+          id: selectedPart.id,
+          partType: selectedPart.type,
+        }}">
+      <img :src="selectedPart.src" title="arm"/>
+    </router-link>
+    <!-- <img @click="showPartInfoLink()" :src="selectedPart.src" title="arm" /> -->
     <button @click="selectPreviousPart()" class="prev-selector"></button>
     <button @click="selectNextPart()" class="next-selector"></button>
     <span class="sale" v-show="selectedPart.onSale">Sale!</span>
     <teleport to="#partInfo" v-if="showPartInfo">
-      <div >
+      <div>
         <div>
           {{ selectedPart.cost }} {{ selectedPart.title }}
           {{ selectedPart.type }}
@@ -39,7 +48,7 @@ function getNextValidIndex(index, length) {
 
 export default {
   // props: ['parts', 'position'],
-  inject: ['user'],
+  inject: ["user"],
   props: {
     parts: {
       type: Array,
@@ -70,6 +79,16 @@ export default {
     },
   },
   methods: {
+    showPartInfoLink() {
+      // this.$router.push('/parts');
+      this.$router.push({
+        name: "Parts",
+        params: {
+          id: this.selectedPart.id,
+          partType: this.selectedPart.type,
+        },
+      });
+    },
     emitSelectedPart() {
       this.$emit("partSelected", this.selectedPart);
     },
@@ -204,5 +223,10 @@ export default {
 }
 .highlight {
   border: 1px solid red;
+}
+
+.part img {
+  width: 165px;
+  cursor: pointer;
 }
 </style>

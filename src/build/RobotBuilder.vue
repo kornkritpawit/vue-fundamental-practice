@@ -1,24 +1,23 @@
 <template>
   <div class="content">
     <div class="part-info" id="partInfo"></div>
-        <div class="preview">
-                  <CollapsibleSection>
-
-      <div class="preview-content">
-        <div class="top-row">
-          <img :src="selectedRobot.head.src"/>
+    <div class="preview">
+      <CollapsibleSection>
+        <div class="preview-content">
+          <div class="top-row">
+            <img :src="selectedRobot.head.src" />
+          </div>
+          <div class="middle-row">
+            <img :src="selectedRobot.leftArm.src" class="rotate-left" />
+            <img :src="selectedRobot.torso.src" />
+            <img :src="selectedRobot.rightArm.src" class="rotate-right" />
+          </div>
+          <div class="bottom-row">
+            <img :src="selectedRobot.base.src" />
+          </div>
         </div>
-        <div class="middle-row">
-          <img :src="selectedRobot.leftArm.src" class="rotate-left"/>
-          <img :src="selectedRobot.torso.src"/>
-          <img :src="selectedRobot.rightArm.src" class="rotate-right"/>
-        </div>
-        <div class="bottom-row">
-          <img :src="selectedRobot.base.src"/>
-        </div>
-      </div>
       </CollapsibleSection>
-              <button class="add-to-cart" @click="addToCart()">Add ot Cart</button>
+      <button class="add-to-cart" @click="addToCart()">Add ot Cart</button>
     </div>
 
     <div class="top-row">
@@ -34,9 +33,11 @@
         </button>
         <button @click="selectNextHead()" class="next-selector">&#9658;</button>
       </div> -->
-              <PartSelector
-              @partSelected="part => testEmithead(part)" position="top" :parts="availableParts.heads"/>
-
+      <PartSelector
+        @partSelected="(part) => testEmithead(part)"
+        position="top"
+        :parts="availableParts.heads"
+      />
     </div>
     <div class="middle-row">
       <!-- <div class="left part">
@@ -66,11 +67,25 @@
           &#9660;
         </button>
       </div> -->
-              <PartSelector @partSelected="part =>{ 
-                selectedRobot.leftArm=part}" position="left" :parts="availableParts.arms"/>
-        <PartSelector @partSelected="part => selectedRobot.torso=part" position="center" :parts="availableParts.torsos"/>
-        <PartSelector @partSelected="part => selectedRobot.rightArm=part" position="right" :parts="availableParts.arms"/>
-
+      <PartSelector
+        @partSelected="
+          (part) => {
+            selectedRobot.leftArm = part;
+          }
+        "
+        position="left"
+        :parts="availableParts.arms"
+      />
+      <PartSelector
+        @partSelected="(part) => (selectedRobot.torso = part)"
+        position="center"
+        :parts="availableParts.torsos"
+      />
+      <PartSelector
+        @partSelected="(part) => (selectedRobot.rightArm = part)"
+        position="right"
+        :parts="availableParts.arms"
+      />
     </div>
     <div class="bottom-row">
       <!-- <div class="bottom part">
@@ -82,8 +97,11 @@
           &#9658;
         </button>
       </div> -->
-              <PartSelector @partSelected="part => selectedRobot.base=part" position="bottom" :parts="availableParts.bases"/>
-
+      <PartSelector
+        @partSelected="(part) => (selectedRobot.base = part)"
+        position="bottom"
+        :parts="availableParts.bases"
+      />
     </div>
     <div>
       <h1>Cart</h1>
@@ -107,9 +125,9 @@
 
 <script>
 import availableParts from "../data/parts";
-import createdHookMixin from './created-hook-mixin';
-import PartSelector from './PartSelector.vue';
-import CollapsibleSection from '../shared/CollapsibleSection.vue';
+import createdHookMixin from "./created-hook-mixin";
+import PartSelector from "./PartSelector.vue";
+import CollapsibleSection from "../shared/CollapsibleSection.vue";
 
 // const getPreviousValidIndex = (index, length) => {
 //   const deprecatedIndex = index - 1;
@@ -122,128 +140,142 @@ import CollapsibleSection from '../shared/CollapsibleSection.vue';
 // }
 
 export default {
-    name: "RobotBuilder",
-    components: {PartSelector, CollapsibleSection},
-    data() {
-        return {
-            availableParts,
-            //   selectedHeadIndex: 0,
-            //   selectedTorsoIndex: 0,
-            //   selectedRightArmIndex: 0,
-            //   selectedLeftArmIndex: 0,
-            //   selectedBaseIndex: 0,
-            cart: [],
-            //   headBorderStyle: {border: '3px solid red'},
-            selectedRobot: {
-                head: {},
-                leftArm: {},
-                torso: {},
-                rightArm: {},
-                base: {}
-            }
-        };
+  name: "RobotBuilder",
+  components: { PartSelector, CollapsibleSection },
+  beforeRouteLeave(to, from, next) {
+    if (this.addedToCart) {
+      next(true);
+    } else {
+      /* eslint no-alert: 0 */
+      /* eslint no-restricted-globals: 0 */
+      const response = confirm(
+        "You have not added your robot to your cart, are you sure you want to leave?"
+      );
+      next(response);
+    }
+  },
+  data() {
+    return {
+      availableParts,
+      //   selectedHeadIndex: 0,
+      //   selectedTorsoIndex: 0,
+      //   selectedRightArmIndex: 0,
+      //   selectedLeftArmIndex: 0,
+      //   selectedBaseIndex: 0,
+    addedToCart: false,
+      cart: [],
+      //   headBorderStyle: {border: '3px solid red'},
+      selectedRobot: {
+        head: {},
+        leftArm: {},
+        torso: {},
+        rightArm: {},
+        base: {},
+      },
+    };
+  },
+  mixins: [createdHookMixin],
+  computed: {
+    saleBorderClass() {
+      return this.selectedRobot.head.onSale ? "sale-border" : "";
     },
-    mixins: [createdHookMixin],
-    computed: {
-        saleBorderClass() {
-            return this.selectedRobot.head.onSale ? "sale-border" : "";
-        },
-        headBorderStyle() {
-            return {
-                border: this.selectedRobot.head.onSale
-                    ? "3px solid red"
-                    : "3px solid #aaa",
-            };
-        },
-        // selectedRobot() {
-        //   return {
-        //     head: availableParts.heads[this.selectedHeadIndex],
-        //     leftArm: availableParts.arms[this.selectedLeftArmIndex],
-        //     torso: availableParts.torsos[this.selectedTorsoIndex],
-        //     rightArm: availableParts.arms[this.selectedRightArmIndex],
-        //     base: availableParts.bases[this.selectedBaseIndex],
-        //   };
-        // },
+    headBorderStyle() {
+      return {
+        border: this.selectedRobot.head.onSale
+          ? "3px solid red"
+          : "3px solid #aaa",
+      };
     },
-    methods: {
-
-        testEmithead(part) {
-            console.log(part)
-            this.selectedRobot.head=part
-        },
-        addToCart() {
-            const robot = this.selectedRobot;
-            const cost = robot.head.cost +
-                robot.leftArm.cost +
-                robot.torso.cost +
-                robot.rightArm.cost +
-                robot.base.cost;
-            this.cart.push({ ...robot, cost });
-        },
-        // selectNextHead() {
-        //   //   this.selectedHeadIndex += 1;
-        //   //   console.log('selectNextHead called');
-        //   this.selectedHeadIndex = getNextValidIndex(
-        //     this.selectedHeadIndex,
-        //     availableParts.heads.length
-        //   );
-        // },
-        // selectPreviousHead() {
-        //   //   this.selectedHeadIndex -= 1;
-        //   this.selectedHeadIndex = getPreviousValidIndex(
-        //     this.selectedHeadIndex,
-        //     availableParts.heads.length
-        //   );
-        // },
-        // selectNextLeftArm() {
-        //   this.selectedLeftArmIndex = getNextValidIndex(
-        //     this.selectedLeftArmIndex,
-        //     availableParts.arms.length
-        //   );
-        // },
-        // selectPreviousLeftArm() {
-        //   this.selectedLeftArmIndex = getPreviousValidIndex(
-        //     this.selectedLeftArmIndex,
-        //     availableParts.arms.length
-        //   );
-        // },
-        // selectNextTorsor() {
-        //   this.selectedTorsoIndex = getNextValidIndex(
-        //     this.selectedTorsoIndex,
-        //     availableParts.torsos.length
-        //   );
-        // },
-        // selectPreviousTorsor() {
-        //   this.selectedTorsoIndex = getPreviousValidIndex(
-        //     this.selectedTorsoIndex,
-        //     availableParts.torsos.length
-        //   );
-        // },
-        // selectNextRightArm() {
-        //   this.selectedRightArmIndex = getNextValidIndex(
-        //     this.selectedRightArmIndex,
-        //     availableParts.arms.length
-        //   );
-        // },
-        // selectPreviousRightArm() {
-        //   this.selectedRightArmIndex = getPreviousValidIndex(
-        //     this.selectedRightArmIndex,
-        //     availableParts.arms.length
-        //   );
-        // },
-        // selectNextBase() {
-        //   this.selectedBaseIndex = getNextValidIndex(
-        //     this.selectedBaseIndex,
-        //     availableParts.bases.length
-        //   );
-        // },
-        // selectPreviousBase() {
-        //   this.selectedBaseIndex = getPreviousValidIndex(
-        //     this.selectedBaseIndex,
-        //     availableParts.bases.length
-        //   );
-        // },
+    // selectedRobot() {
+    //   return {
+    //     head: availableParts.heads[this.selectedHeadIndex],
+    //     leftArm: availableParts.arms[this.selectedLeftArmIndex],
+    //     torso: availableParts.torsos[this.selectedTorsoIndex],
+    //     rightArm: availableParts.arms[this.selectedRightArmIndex],
+    //     base: availableParts.bases[this.selectedBaseIndex],
+    //   };
+    // },
+  },
+  methods: {
+    testEmithead(part) {
+      console.log(part);
+      this.selectedRobot.head = part;
     },
+    addToCart() {
+      const robot = this.selectedRobot;
+      const cost =
+        robot.head.cost +
+        robot.leftArm.cost +
+        robot.torso.cost +
+        robot.rightArm.cost +
+        robot.base.cost;
+      this.cart.push({ ...robot, cost });
+            this.addedToCart = true;
+    },
+    // selectNextHead() {
+    //   //   this.selectedHeadIndex += 1;
+    //   //   console.log('selectNextHead called');
+    //   this.selectedHeadIndex = getNextValidIndex(
+    //     this.selectedHeadIndex,
+    //     availableParts.heads.length
+    //   );
+    // },
+    // selectPreviousHead() {
+    //   //   this.selectedHeadIndex -= 1;
+    //   this.selectedHeadIndex = getPreviousValidIndex(
+    //     this.selectedHeadIndex,
+    //     availableParts.heads.length
+    //   );
+    // },
+    // selectNextLeftArm() {
+    //   this.selectedLeftArmIndex = getNextValidIndex(
+    //     this.selectedLeftArmIndex,
+    //     availableParts.arms.length
+    //   );
+    // },
+    // selectPreviousLeftArm() {
+    //   this.selectedLeftArmIndex = getPreviousValidIndex(
+    //     this.selectedLeftArmIndex,
+    //     availableParts.arms.length
+    //   );
+    // },
+    // selectNextTorsor() {
+    //   this.selectedTorsoIndex = getNextValidIndex(
+    //     this.selectedTorsoIndex,
+    //     availableParts.torsos.length
+    //   );
+    // },
+    // selectPreviousTorsor() {
+    //   this.selectedTorsoIndex = getPreviousValidIndex(
+    //     this.selectedTorsoIndex,
+    //     availableParts.torsos.length
+    //   );
+    // },
+    // selectNextRightArm() {
+    //   this.selectedRightArmIndex = getNextValidIndex(
+    //     this.selectedRightArmIndex,
+    //     availableParts.arms.length
+    //   );
+    // },
+    // selectPreviousRightArm() {
+    //   this.selectedRightArmIndex = getPreviousValidIndex(
+    //     this.selectedRightArmIndex,
+    //     availableParts.arms.length
+    //   );
+    // },
+    // selectNextBase() {
+    //   this.selectedBaseIndex = getNextValidIndex(
+    //     this.selectedBaseIndex,
+    //     availableParts.bases.length
+    //   );
+    // },
+    // selectPreviousBase() {
+    //   this.selectedBaseIndex = getPreviousValidIndex(
+    //     this.selectedBaseIndex,
+    //     availableParts.bases.length
+    //   );
+    // },
+  },
 };
 </script>
 
@@ -354,7 +386,7 @@ export default {
 .add-to-cart {
   position: absolute;
   width: 210px;
-//   right: 30px;
+  //   right: 30px;
   padding: 3px;
   font-size: 16px;
 }

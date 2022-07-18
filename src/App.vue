@@ -4,37 +4,57 @@
     <nav>
       <ul>
         <li class="nav-item">
-              <img class="logo" src="./assets/build-a-bot-logo.png"/>
-              Build-a-Bot
-          </li>
-          <li>User: {{user.userName}}
+          <router-link
+            class="nav-link"
+            active-class="foo"
+            :to="{ name: 'Home' }"
+            exact
+          >
+            <img class="logo" src="./assets/build-a-bot-logo.png" />
+            Build-a-Bot
+          </router-link>
+        </li>
+        <li class="nav-item">
+          User: {{ user.userName }}
           <button @click="changeUserName()">Change</button>
-          </li>
+        </li>
+        <li class="nav-item">
+          <router-link
+            class="nav-link"
+            :to="{ name: 'Build' }"
+            exact
+          >
+            Build
+          </router-link>
+        </li>
       </ul>
     </nav>
   </header>
-  <main>
-    <!-- <div class="robot-name">
-      This is a test
 
-    </div> -->
-            <RobotBuilder/>
-<Search/>
-  </main>
+  <div class="container">
+    <aside class="aside">
+      <router-view name="sidebar" />
+    </aside>
+    <main>
+      <router-view />
+      <!-- <RobotBuilder/> -->
+      <!-- <Search/> -->
+    </main>
+  </div>
 </template>
 
 <script>
 // import Homepage from './home/HomePage.vue'
-import RobotBuilder from './build/RobotBuilder.vue'
-import Search from './search/Search.vue'
+import RobotBuilder from "./build/RobotBuilder.vue";
+import Search from "./search/Search.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
-      // userName: 'Jim' 
-      user: {userName:'John'}
-    }
+      // userName: 'Jim'
+      user: { userName: "John" },
+    };
   },
 
   // provide: {
@@ -42,20 +62,19 @@ export default {
   // },
   provide() {
     // return {userName: this.userName}
-        return {user: this.user}
-
+    return { user: this.user };
   },
   components: {
     RobotBuilder,
-    Search
+    Search,
   },
   methods: {
     changeUserName() {
-      this.user.userName = 'Fred'
+      this.user.userName = "Fred";
       // this.user = {userName:'Fred'} //broken
-    }
+    },
   },
-}
+};
 </script>
 <style>
 body {
@@ -106,5 +125,26 @@ ul {
 .logo {
   vertical-align: middle;
   height: 30px;
+}
+.nav-link {
+  text-decoration: none;
+  color: inherit;
+}
+.router-link-active {
+  color: white;
+}
+.foo {
+  color: white;
+}
+.container {
+  display: flex;
+  margin: 10px auto 0 auto;
+  justify-content: center;
+}
+.aside {
+  padding: 30px;
+  background-color: #aaa;
+  width: 100px;
+  min-height: 300px;
 }
 </style>
