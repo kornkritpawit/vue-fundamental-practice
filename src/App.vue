@@ -52,6 +52,7 @@ export default {
   methods: {
     changeUserName() {
       this.user.userName = 'Fred'
+      // this.user = {userName:'Fred'} //broken
     }
   },
 }
