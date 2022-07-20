@@ -159,7 +159,7 @@ export default {
   },
   data() {
     return {
-    //   availableParts,
+      // availableParts,
       //   selectedHeadIndex: 0,
       //   selectedTorsoIndex: 0,
       //   selectedRightArmIndex: 0,
@@ -190,7 +190,8 @@ export default {
       };
     },
     availableParts() {
-        return this.$store.state.parts
+        // return this.$store.state.parts
+              return this.$store.state.robots.parts;
     },
     // selectedRobot() {
     //   return {

@@ -40,11 +40,12 @@ export default createStore({
     users: usersModule,
   },
   getters: {
-    cartSaleItems(state) {
-      return state.cart.filter((item) => item.head.onSale);
-    },
-    foo(state) {
-      return `root-getter/${state.foo}`;
-    },
+    // cartSaleItems(state) {
+    //   return state.cart.filter((item) => item.head.onSale);
+    // },
+
+    // foo(state) {
+    //   return `root-getter/${state.foo}`;
+    // },
   },
 });
