@@ -9,9 +9,12 @@
 
 <script>
 import parts from '../data/parts';
+import getPartsMixin from './get-parts-mixin';
 
 export default {
   name: 'PartInfo',
+    mixins: [getPartsMixin],
+
   // data() {
   //   return {
   //     part: {
@@ -41,10 +44,12 @@ export default {
       // }
 
             // const {partType, id} = this.$route.params
-                        const {partType, id} = this
+        const {partType, id} = this
 
       // const { partType, id } = this;
-      return parts[partType].find((part) => part.id === +id);
+    //   return parts[partType].find((part) => part.id === +id);
+          return this.parts[partType].find((part) => part.id === +id);
+
     },
   },
 };

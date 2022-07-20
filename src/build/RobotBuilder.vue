@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div v-if="availableParts" class="content">
     <div class="part-info" id="partInfo"></div>
     <div class="preview">
       <CollapsibleSection>
@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import availableParts from "../data/parts";
+// import availableParts from "../data/parts";
 import createdHookMixin from "./created-hook-mixin";
 import PartSelector from "./PartSelector.vue";
 import CollapsibleSection from "../shared/CollapsibleSection.vue";
@@ -154,9 +154,12 @@ export default {
       next(response);
     }
   },
+  created() {
+    this.$store.dispatch('getParts')
+  },
   data() {
     return {
-      availableParts,
+    //   availableParts,
       //   selectedHeadIndex: 0,
       //   selectedTorsoIndex: 0,
       //   selectedRightArmIndex: 0,
@@ -186,6 +189,9 @@ export default {
           : "3px solid #aaa",
       };
     },
+    availableParts() {
+        return this.$store.state.parts
+    },
     // selectedRobot() {
     //   return {
     //     head: availableParts.heads[this.selectedHeadIndex],
@@ -211,7 +217,10 @@ export default {
         robot.base.cost;
         
       // this.cart.push({ ...robot, cost });
-      this.$store.commit('addRobotToCart', {...robot, cost})
+    //   this.$store.commit('addRobotToCart', {...robot, cost})
+          this.$store.dispatch('addRobotToCart', {...robot, cost})
+          .then(() =>this.$router.push('/cart'))
+
             this.addedToCart = true;
     },
     // selectNextHead() {
