@@ -1,8 +1,8 @@
 export default {
   created() {
-    this.$store.dispatch('getParts');
+    // this.$store.dispatch('getParts');
 
-    // this.$store.dispatch('robots/getParts');
+    this.$store.dispatch('robots/getParts');
   },
   computed: {
 

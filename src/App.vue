@@ -1,5 +1,14 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
+    <div>
+    Root Foo: {{rootFoo}} <br/>
+    Robots Foo: {{robotsFoo}} <br/>
+    Users Foo: {{usersFoo}} <br/>
+    <br/>
+    Root Getter Foo: {{rootGetterFoo}} <br/>
+    Robots Getter Foo: {{robotsGetterFoo}} <br/>
+    Users Foo: {{usersGetterFoo}} <br/>
+  </div>
   <header>
     <nav>
       <ul>
@@ -49,9 +58,13 @@
 // import Homepage from './home/HomePage.vue'
 import RobotBuilder from "./build/RobotBuilder.vue";
 import Search from "./search/Search.vue";
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: "App",
+  created(){
+    console.log(process.env.VUE_APP_TEST, process.env.SOME_TEST)
+  },
   data() {
     return {
       // userName: 'Jim'
@@ -71,6 +84,31 @@ export default {
     Search,
   },
   computed: {
+    // rootFoo() {
+    //   return this.$store.state.foo;
+    // },
+    // robotsFoo() {
+    //   return this.$store.state.robots.foo
+    // },
+    // usersFoo() {
+    //   return this.$store.state.users.foo;
+    // },
+    // rootGetterFoo() {
+    //   return this.$store.getters.foo;
+    // },
+    //     robotsGetterFoo() {
+    //   return this.$store.getters['robots/foo'];
+    // },
+    usersGetterFoo() {
+      return this.$store.getters['users/foo'];
+    },
+        ...mapState({
+      rootFoo: 'foo',
+      usersFoo: (state) => state.users.foo,
+    }),
+    ...mapState('robots', { robotsFoo: 'foo' }),
+    ...mapGetters({ rootGetterFoo: 'foo' }),
+    ...mapGetters('robots', { robotsGetterFoo: 'foo' }),
         cart() {
     //   return this.$store.state.cart;
             return this.$store.state.robots.cart;

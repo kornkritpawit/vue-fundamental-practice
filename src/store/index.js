@@ -4,11 +4,12 @@ import robotsModule from './modules/robots';
 import usersModule from './modules/users';
 
 export default createStore({
-  // state: {
-  //   cart: [],
-  //   foo: 'root-foo',
-  //   parts: null,
-  // },
+  state: {
+    cart: [],
+    parts: null,
+    foo: 'root-foo',
+
+  },
   // mutations: {
   //   addRobotToCart(state, robot) {
   //     state.cart.push(robot)

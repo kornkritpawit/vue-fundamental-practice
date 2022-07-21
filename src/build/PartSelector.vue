@@ -1,23 +1,34 @@
 <template>
   <div class="part" :class="position">
+        {{pinPadding}}
+
     <div>Inject User: {{ user.userName }}</div>
     <!-- <img
       :src="selectedPart.src"
       @click="showPartInfo = !showPartInfo"
       title="arm"
     /> -->
-    <router-link :to="{
+    <router-link
+      :to="{
         name: 'Parts',
         params: {
           id: selectedPart.id,
           partType: selectedPart.type,
-        }}">
-      <img :src="selectedPart.src" title="arm"/>
+        },
+      }"
+    >
+      <img :src="selectedPart.src" title="arm" />
     </router-link>
     <!-- <img @click="showPartInfoLink()" :src="selectedPart.src" title="arm" /> -->
     <button @click="selectPreviousPart()" class="prev-selector"></button>
     <button @click="selectNextPart()" class="next-selector"></button>
-    <span class="sale" v-show="selectedPart.onSale">Sale!</span>
+    <!-- <span v-pin class="sale" v-show="selectedPart.onSale">Sale!</span> -->
+    <!-- <span v-pin:position.bottom.left class="sale" v-show="selectedPart.onSale">Sale!</span> -->
+
+    <!-- <span v-pin="{bottom: '10px', right:'50px'}" class="sale" v-show="selectedPart.onSale" -->
+      <span @click="pinPadding='30px'" v-pin="{bottom: pinPadding, right: pinPadding}" class="sale" v-show="selectedPart.onSale"
+      >Sale!</span
+    >
     <teleport to="#partInfo" v-if="showPartInfo">
       <div>
         <div>
@@ -33,7 +44,7 @@
 
 <script>
 import availableParts from "../data/parts";
-
+// import pinDirective from "@/shared/pin-directive";
 // const parts = availableParts.heads;
 
 function getPreviousValidIndex(index, length) {
@@ -48,6 +59,7 @@ function getNextValidIndex(index, length) {
 
 export default {
   // props: ['parts', 'position'],
+  // directives: { pin: pinDirective },
   inject: ["user"],
   props: {
     parts: {
@@ -63,7 +75,7 @@ export default {
     },
   },
   data() {
-    return { selectedPartIndex: 0, showPartInfo: false };
+    return { selectedPartIndex: 0, showPartInfo: false, pinPadding: '10px' };
   },
   created() {
     console.log(this.parts);
@@ -119,10 +131,16 @@ export default {
   height: 165px;
   border: 3px solid #aaa;
 }
-.sale {
+/* .sale {
   position: absolute;
   bottom: 5px;
   right: 5px;
+  color: white;
+  background-color: red;
+  padding: 3px;
+} */
+
+.sale {
   color: white;
   background-color: red;
   padding: 3px;

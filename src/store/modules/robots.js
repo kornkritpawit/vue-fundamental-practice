@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default {
-  // namespaced: true,
+  namespaced: true,
   state: {
     cart: [],
     parts: null,
@@ -31,9 +31,9 @@ export default {
     cartSaleItems(state) {
       return state.cart.filter((item) => item.head.onSale);
     },
-    // foo(state) {
-    //   return `robots-getter/${state.foo}`;
-    // },
+    foo(state) {
+      return `robots-getter/${state.foo}`;
+    },
 
   },
 };

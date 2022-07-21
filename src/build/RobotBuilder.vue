@@ -128,6 +128,7 @@
 import createdHookMixin from "./created-hook-mixin";
 import PartSelector from "./PartSelector.vue";
 import CollapsibleSection from "../shared/CollapsibleSection.vue";
+import { mapActions, mapMutations } from 'vuex';
 
 // const getPreviousValidIndex = (index, length) => {
 //   const deprecatedIndex = index - 1;
@@ -155,7 +156,9 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('getParts')
+    // this.$store.dispatch('getParts')
+        // this.$store.dispatch('robots/getParts')
+        this.getParts()
   },
   data() {
     return {
@@ -204,6 +207,8 @@ export default {
     // },
   },
   methods: {
+        ...mapActions('robots', ['getParts', 'addRobotToCart']),
+
     testEmithead(part) {
       console.log(part);
       this.selectedRobot.head = part;
@@ -219,7 +224,9 @@ export default {
         
       // this.cart.push({ ...robot, cost });
     //   this.$store.commit('addRobotToCart', {...robot, cost})
-          this.$store.dispatch('addRobotToCart', {...robot, cost})
+          // this.$store.dispatch('addRobotToCart', {...robot, cost})
+          // this.$store.dispatch('robots/addRobotToCart', {...robot, cost})
+                    this.addRobotToCart({...robot, cost})
           .then(() =>this.$router.push('/cart'))
 
             this.addedToCart = true;
